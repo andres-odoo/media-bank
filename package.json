@@ -1,0 +1,12 @@
+{
+  "name": "image-bank",
+  "version": "1.0.0",
+  "description": "A simple image bank demo project",
+  "scripts": {
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
