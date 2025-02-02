@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import defineMedia from './Media.js';
+import defineUser from './User.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,5 +14,6 @@ const sequelize = new Sequelize({
 });
 
 const Media = defineMedia(sequelize);
+const User = defineUser(sequelize);
 
-export { sequelize, Media };
+export { sequelize, Media, User };

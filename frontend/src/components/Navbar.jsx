@@ -1,7 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4">
@@ -13,26 +22,53 @@ function Navbar() {
             </Link>
             
             <div className="hidden md:flex space-x-4">
-              <Link to="/gallery" className="text-gray-600 hover:text-gray-900">
+              <Link to="/images" className="text-gray-600 hover:text-gray-900">
                 Imágenes
               </Link>
               <Link to="/videos" className="text-gray-600 hover:text-gray-900">
                 Videos
               </Link>
-              <Link to="/upload" className="text-gray-600 hover:text-gray-900">
-                Subir
-              </Link>
+              {user && (
+                <Link to="/upload" className="text-gray-600 hover:text-gray-900">
+                  Subir
+                </Link>
+              )}
             </div>
           </div>
 
           {/* Right side - Auth buttons */}
           <div className="flex items-center space-x-4">
-            <button className="text-gray-600 hover:text-gray-900">
-              Iniciar sesión
-            </button>
-            <button className="bg-gray-100 text-gray-800 hover:bg-gray-200 px-4 py-2 rounded-md">
-              Registrarse
-            </button>
+            {user ? (
+              <>
+                <span className="text-gray-600">
+                  {user.name || user.email}
+                </span>
+                <Link to="/cart" className="text-gray-600 hover:text-gray-900">
+                  Carrito
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="bg-gray-100 text-gray-800 hover:bg-gray-200 px-4 py-2 rounded-md"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  Iniciar sesión
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-gray-100 text-gray-800 hover:bg-gray-200 px-4 py-2 rounded-md"
+                >
+                  Registrarse
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

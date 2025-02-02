@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { join } from 'path';
+import { Op } from 'sequelize';
 import { Media } from '../models/index.js';
 
 const router = express.Router();
@@ -32,10 +32,33 @@ const upload = multer({
   }
 });
 
-// Get all media
+// Get all media with filtering
 router.get('/media', async (req, res) => {
   try {
-    const media = await Media.findAll();
+    const { q, type } = req.query;
+    let whereClause = {};
+
+    // Add search query filter
+    if (q) {
+      whereClause = {
+        [Op.or]: [
+          { title: { [Op.like]: `%${q}%` } },
+          { description: { [Op.like]: `%${q}%` } },
+          { category: { [Op.like]: `%${q}%` } }
+        ]
+      };
+    }
+
+    // Add type filter
+    if (type && type !== 'all') {
+      whereClause.type = type;
+    }
+
+    const media = await Media.findAll({
+      where: whereClause,
+      order: [['createdAt', 'DESC']]
+    });
+
     res.json(media || []);
   } catch (error) {
     console.error('Error fetching media:', error);
@@ -71,37 +94,6 @@ router.post('/media', upload.single('file'), async (req, res) => {
     console.error('Error uploading media:', error);
     res.status(400).json({ 
       message: 'Error uploading media',
-      error: error.message 
-    });
-  }
-});
-
-// Simulate purchase
-router.post('/purchase', async (req, res) => {
-  try {
-    const { mediaIds } = req.body;
-    if (!mediaIds || !Array.isArray(mediaIds)) {
-      return res.status(400).json({ message: 'Invalid media IDs provided' });
-    }
-
-    const mediaItems = await Media.findAll({
-      where: {
-        id: mediaIds
-      }
-    });
-    
-    const total = mediaItems.reduce((sum, item) => sum + item.price, 0);
-    
-    res.json({
-      success: true,
-      message: 'Purchase simulated successfully',
-      total,
-      items: mediaItems
-    });
-  } catch (error) {
-    console.error('Error processing purchase:', error);
-    res.status(400).json({ 
-      message: 'Error processing purchase',
       error: error.message 
     });
   }
