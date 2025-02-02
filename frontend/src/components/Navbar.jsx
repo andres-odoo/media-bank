@@ -1,31 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 
 function Navbar() {
-  const { cartItems } = useCart();
-
   return (
-    <nav className="bg-white shadow-lg">
-      <div className="container mx-auto px-6 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Link to="/" className="text-gray-800 text-xl font-bold">
-              Image Bank
+    <nav className="bg-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-center h-16">
+          {/* Left side - Logo and main navigation */}
+          <div className="flex items-center space-x-8">
+            <Link to="/" className="text-xl font-bold text-red-500">
+              MediaBank
             </Link>
+            
+            <div className="hidden md:flex space-x-4">
+              <Link to="/gallery" className="text-gray-600 hover:text-gray-900">
+                Imágenes
+              </Link>
+              <Link to="/videos" className="text-gray-600 hover:text-gray-900">
+                Videos
+              </Link>
+              <Link to="/upload" className="text-gray-600 hover:text-gray-900">
+                Subir
+              </Link>
+            </div>
           </div>
+
+          {/* Right side - Auth buttons */}
           <div className="flex items-center space-x-4">
-            <Link to="/upload" className="text-gray-600 hover:text-gray-800">
-              Upload
-            </Link>
-            <Link to="/cart" className="text-gray-600 hover:text-gray-800 relative">
-              Cart
-              {cartItems.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                  {cartItems.length}
-                </span>
-              )}
-            </Link>
+            <button className="text-gray-600 hover:text-gray-900">
+              Iniciar sesión
+            </button>
+            <button className="bg-gray-100 text-gray-800 hover:bg-gray-200 px-4 py-2 rounded-md">
+              Registrarse
+            </button>
           </div>
         </div>
       </div>

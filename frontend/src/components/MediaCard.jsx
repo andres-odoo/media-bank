@@ -2,47 +2,61 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 
 function MediaCard({ media }) {
-  const { addToCart, cartItems } = useCart();
-  const isInCart = cartItems.some(item => item.id === media.id);
-  const isVideo = media.type === 'video';
+  const { addToCart, removeFromCart, isInCart } = useCart();
+  const inCart = media?.id ? isInCart(media.id) : false;
+
+  const handleCartAction = (e) => {
+    e.preventDefault();
+    if (inCart) {
+      removeFromCart(media.id);
+    } else {
+      addToCart(media);
+    }
+  };
+
+  if (!media) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="relative w-full h-48">
-        {isVideo ? (
-          <video
-            src={`http://localhost:3000/uploads/${media.filename}`}
-            className="w-full h-full object-cover"
-            controls
-          />
-        ) : (
-          <img
-            src={`http://localhost:3000/uploads/${media.filename}`}
-            alt={media.title}
-            className="w-full h-full object-cover"
-          />
-        )}
-      </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold">{media.title}</h3>
-        <p className="text-gray-600 text-sm mt-1">{media.description}</p>
-        <div className="flex items-center justify-between mt-2">
-          <p className="text-gray-800 font-bold">${media.price.toFixed(2)}</p>
-          <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-sm">
-            {media.type}
-          </span>
+    <div className="group relative overflow-hidden rounded-lg bg-gray-100">
+      {/* Media Preview */}
+      {media.type === 'video' ? (
+        <video
+          className="w-full h-48 object-cover"
+          src={`http://localhost:3000/uploads/${media.filename}`}
+        />
+      ) : (
+        <img
+          className="w-full h-48 object-cover transform transition-transform group-hover:scale-105"
+          src={`http://localhost:3000/uploads/${media.filename}`}
+          alt={media.title}
+        />
+      )}
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100">
+        <div className="text-white text-center p-4">
+          <h3 className="text-sm font-semibold mb-2">{media.title}</h3>
+          <div className="flex gap-2 justify-center">
+            <button
+              onClick={handleCartAction}
+              className={`px-4 py-2 rounded-full text-sm ${
+                inCart
+                  ? 'bg-red-500 hover:bg-red-600'
+                  : 'bg-blue-500 hover:bg-blue-600'
+              }`}
+            >
+              {inCart ? 'Remove' : 'Add to Cart'}
+            </button>
+            <button className="px-4 py-2 rounded-full bg-gray-700 hover:bg-gray-800 text-sm">
+              Preview
+            </button>
+          </div>
         </div>
-        <button
-          onClick={() => !isInCart && addToCart(media)}
-          className={`mt-3 w-full py-2 px-4 rounded ${
-            isInCart
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700'
-          } text-white font-semibold`}
-          disabled={isInCart}
-        >
-          {isInCart ? 'Added to Cart' : 'Add to Cart'}
-        </button>
+      </div>
+
+      {/* Price Tag */}
+      <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-md text-sm font-semibold shadow">
+        ${media.price || 0}
       </div>
     </div>
   );
