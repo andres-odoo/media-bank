@@ -11,19 +11,27 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
 
   const addToCart = (item) => {
     setCartItems((prevItems) => {
-      if (!prevItems.find((i) => i.id === item.id)) {
-        return [...prevItems, item];
-      }
-      return prevItems;
+      const newItems = prevItems.find((i) => i.id === item.id)
+        ? prevItems
+        : [...prevItems, item];
+      localStorage.setItem('cart', JSON.stringify(newItems));
+      return newItems;
     });
   };
 
   const removeFromCart = (itemId) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+    setCartItems((prevItems) => {
+      const newItems = prevItems.filter((item) => item.id !== itemId);
+      localStorage.setItem('cart', JSON.stringify(newItems));
+      return newItems;
+    });
   };
 
   const isInCart = (itemId) => {
@@ -32,6 +40,7 @@ export function CartProvider({ children }) {
 
   const clearCart = () => {
     setCartItems([]);
+    localStorage.removeItem('cart');
   };
 
   const getCartTotal = () => {

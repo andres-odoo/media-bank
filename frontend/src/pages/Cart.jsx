@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 function Cart() {
   const { cartItems, removeFromCart, getCartTotal, clearCart } = useCart();
+  const navigate = useNavigate();
 
   const handlePurchase = async () => {
     try {
@@ -77,10 +79,10 @@ function Cart() {
           <span className="text-xl font-bold">${getCartTotal().toFixed(2)}</span>
         </div>
         <button
-          onClick={handlePurchase}
+          onClick={() => navigate('/checkout')}
           className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
         >
-          Purchase
+          Proceed to Checkout
         </button>
       </div>
     </div>

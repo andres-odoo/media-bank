@@ -8,6 +8,8 @@ import Upload from './pages/Upload';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Checkout from './pages/Checkout';
+import CheckoutSuccess from './pages/CheckoutSuccess';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import UserProfile from './pages/UserProfile';
@@ -28,6 +30,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout/success" element={<CheckoutSuccess />} />
         </Routes>
       </div>
     </AuthProvider>

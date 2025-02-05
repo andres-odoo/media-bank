@@ -47,8 +47,8 @@ const startServer = async () => {
     console.log('Database connection has been established successfully.');
     
     // Sync models without force
-    // Force sync for development - this will drop all tables and recreate them
-    await sequelize.sync({ force: true });
+    // Sync models without force to maintain data
+    await sequelize.sync();
     console.log('All models were synchronized successfully.');
 
     // Start listening
