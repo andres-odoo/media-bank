@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Upload() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Redirect if not logged in
+  React.useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  if (!user) {
+    return null;
+  }
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -49,6 +62,9 @@ function Upload() {
     try {
       const response = await fetch('http://localhost:3000/api/media', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: data
       });
 

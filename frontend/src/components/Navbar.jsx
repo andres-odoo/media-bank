@@ -40,9 +40,9 @@ function Navbar() {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                <span className="text-gray-600">
+                <Link to="/profile" className="text-gray-600 hover:text-gray-900">
                   {user.name || user.email}
-                </span>
+                </Link>
                 <Link to="/cart" className="text-gray-600 hover:text-gray-900">
                   Carrito
                 </Link>

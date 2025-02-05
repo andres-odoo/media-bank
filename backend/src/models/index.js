@@ -16,4 +16,14 @@ const sequelize = new Sequelize({
 const Media = defineMedia(sequelize);
 const User = defineUser(sequelize);
 
+// Define relationships
+User.hasMany(Media, {
+  foreignKey: 'userId',
+  onDelete: 'CASCADE'
+});
+
+Media.belongsTo(User, {
+  foreignKey: 'userId'
+});
+
 export { sequelize, Media, User };

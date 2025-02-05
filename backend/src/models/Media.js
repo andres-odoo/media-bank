@@ -25,6 +25,14 @@ export default function(sequelize) {
       allowNull: false,
       defaultValue: 0
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
     category: {
       type: DataTypes.STRING,
       defaultValue: 'Uncategorized'

@@ -9,9 +9,12 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
+    <CartProvider>
     <AuthProvider>
       <div className="min-h-screen bg-gray-50">
         <Navbar />
@@ -24,9 +27,11 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </div>
     </AuthProvider>
+    </CartProvider>
   );
 }
 

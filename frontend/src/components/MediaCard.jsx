@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import PreviewModal from './PreviewModal';
 
 function MediaCard({ media }) {
   const { addToCart, removeFromCart, isInCart } = useCart();
+  const [showPreview, setShowPreview] = useState(false);
   const inCart = media?.id ? isInCart(media.id) : false;
 
   const handleCartAction = (e) => {
@@ -47,7 +49,9 @@ function MediaCard({ media }) {
             >
               {inCart ? 'Remove' : 'Add to Cart'}
             </button>
-            <button className="px-4 py-2 rounded-full bg-gray-700 hover:bg-gray-800 text-sm">
+            <button 
+              onClick={() => setShowPreview(true)} 
+              className="px-4 py-2 rounded-full bg-gray-700 hover:bg-gray-800 text-sm">
               Preview
             </button>
           </div>
@@ -58,6 +62,13 @@ function MediaCard({ media }) {
       <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-md text-sm font-semibold shadow">
         ${media.price || 0}
       </div>
+
+      {/* Preview Modal */}
+      <PreviewModal
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        media={media}
+      />
     </div>
   );
 }

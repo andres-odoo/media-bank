@@ -42,7 +42,7 @@ function Gallery() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <div className="relative h-[500px] bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+      <div className="relative h-[340px] bg-gradient-to-r from-gray-900 to-gray-800 text-white">
         <div className="absolute inset-0 bg-black opacity-50"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
           <h1 className="text-5xl font-bold mb-6">

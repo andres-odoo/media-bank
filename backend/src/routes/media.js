@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { Op } from 'sequelize';
 import { Media } from '../models/index.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -70,7 +71,10 @@ router.get('/media', async (req, res) => {
 });
 
 // Upload new media
-router.post('/media', upload.single('file'), async (req, res) => {
+router.post('/media', authenticateToken, upload.single('file'), async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file provided' });
@@ -86,7 +90,8 @@ router.post('/media', upload.single('file'), async (req, res) => {
       filename,
       type,
       price: parseFloat(price) || 0,
-      category: category || 'Uncategorized'
+      category: category || 'Uncategorized',
+      userId: req.user.id
     });
 
     res.status(201).json(media);

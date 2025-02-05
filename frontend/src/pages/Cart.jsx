@@ -2,7 +2,7 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 
 function Cart() {
-  const { cartItems, removeFromCart, getTotal, clearCart } = useCart();
+  const { cartItems, removeFromCart, getCartTotal, clearCart } = useCart();
 
   const handlePurchase = async () => {
     try {
@@ -74,7 +74,7 @@ function Cart() {
       <div className="mt-8 bg-white p-4 rounded-lg shadow">
         <div className="flex justify-between items-center mb-4">
           <span className="font-semibold">Total:</span>
-          <span className="text-xl font-bold">${getTotal().toFixed(2)}</span>
+          <span className="text-xl font-bold">${getCartTotal().toFixed(2)}</span>
         </div>
         <button
           onClick={handlePurchase}

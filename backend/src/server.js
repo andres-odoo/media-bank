@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import mediaRoutes from './routes/media.js';
 import authRoutes from './routes/auth.js';
+import userRoutes from './routes/userRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api', mediaRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -45,7 +47,8 @@ const startServer = async () => {
     console.log('Database connection has been established successfully.');
     
     // Sync models without force
-    await sequelize.sync();
+    // Force sync for development - this will drop all tables and recreate them
+    await sequelize.sync({ force: true });
     console.log('All models were synchronized successfully.');
 
     // Start listening
