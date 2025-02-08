@@ -16,9 +16,9 @@ import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
-    <CartProvider>
     <AuthProvider>
-      <div className="min-h-screen bg-gray-50">
+      <CartProvider>
+        <div className="min-h-screen bg-gray-50">
         <Navbar />
         <Routes>
           <Route path="/" element={<Gallery />} />
@@ -33,9 +33,9 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/success" element={<CheckoutSuccess />} />
         </Routes>
-      </div>
+        </div>
+      </CartProvider>
     </AuthProvider>
-    </CartProvider>
   );
 }
 

@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import PreviewModal from './PreviewModal';
 
 function MediaCard({ media }) {
   const { addToCart, removeFromCart, isInCart } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [showPreview, setShowPreview] = useState(false);
   const inCart = media?.id ? isInCart(media.id) : false;
 
   const handleCartAction = (e) => {
     e.preventDefault();
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     if (inCart) {
       removeFromCart(media.id);
     } else {
@@ -41,13 +49,12 @@ function MediaCard({ media }) {
           <div className="flex gap-2 justify-center">
             <button
               onClick={handleCartAction}
-              className={`px-4 py-2 rounded-full text-sm ${
-                inCart
-                  ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-blue-500 hover:bg-blue-600'
+              className={`px-4 py-2 rounded-full text-sm ${inCart && user
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-blue-500 hover:bg-blue-600'
               }`}
             >
-              {inCart ? 'Remove' : 'Add to Cart'}
+              {inCart && user ? 'Remove' : 'Add to Cart'}
             </button>
             <button 
               onClick={() => setShowPreview(true)} 

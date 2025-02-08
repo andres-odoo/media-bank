@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
@@ -11,25 +12,37 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
+  const { user } = useAuth();
+  const [cartItems, setCartItems] = useState([]);
+
+  // Load cart items when user changes
+  useEffect(() => {
+    if (user?.id) {
+      const savedCart = localStorage.getItem(`cart_${user.id}`);
+      setCartItems(savedCart ? JSON.parse(savedCart) : []);
+    } else {
+      setCartItems([]);
+    }
+  }, [user]);
 
   const addToCart = (item) => {
+    if (!user?.id) return;
+    
     setCartItems((prevItems) => {
       const newItems = prevItems.find((i) => i.id === item.id)
         ? prevItems
         : [...prevItems, item];
-      localStorage.setItem('cart', JSON.stringify(newItems));
+      localStorage.setItem(`cart_${user.id}`, JSON.stringify(newItems));
       return newItems;
     });
   };
 
   const removeFromCart = (itemId) => {
+    if (!user?.id) return;
+
     setCartItems((prevItems) => {
       const newItems = prevItems.filter((item) => item.id !== itemId);
-      localStorage.setItem('cart', JSON.stringify(newItems));
+      localStorage.setItem(`cart_${user.id}`, JSON.stringify(newItems));
       return newItems;
     });
   };
@@ -39,8 +52,10 @@ export function CartProvider({ children }) {
   };
 
   const clearCart = () => {
+    if (!user?.id) return;
+    
     setCartItems([]);
-    localStorage.removeItem('cart');
+    localStorage.removeItem(`cart_${user.id}`);
   };
 
   const getCartTotal = () => {
